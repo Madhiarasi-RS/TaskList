@@ -10,16 +10,14 @@ interface AuthUser {
 
 // Define the initial state type
 interface AuthState {
-  user: AuthUser | null;
-  isLoading: boolean;
-  error: string | null;
+   user: AuthUser | null;
+  accessToken: string | null;
 }
 
 // Initial state
 const initialState: AuthState = {
   user: null,
-  isLoading: false,
-  error: null,
+  accessToken: null,
 };
 
 // Create the auth slice
@@ -27,25 +25,20 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    login(state, action: PayloadAction<AuthUser>) {
-      state.user = action.payload;
-      state.isLoading = false;
-      state.error = null;
+    login(
+      state,
+      action: PayloadAction<{ user: AuthUser; accessToken: string }>
+    ) {
+      state.user = action.payload.user;
+      state.accessToken = action.payload.accessToken;
     },
     logout(state) {
       state.user = null;
-      state.isLoading = false;
-      state.error = null;
-    },
-    setAuthLoading(state, action: PayloadAction<boolean>) {
-      state.isLoading = action.payload;
-    },
-    setAuthError(state, action: PayloadAction<string | null>) {
-      state.error = action.payload;
+      state.accessToken = null;
     },
   },
 });
 
 // Export actions and reducer
-export const { login, logout, setAuthLoading, setAuthError } = authSlice.actions;
+export const { login, logout } = authSlice.actions;
 export default authSlice.reducer;

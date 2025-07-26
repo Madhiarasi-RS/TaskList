@@ -8,17 +8,19 @@ import { MainTabs } from './MainTabs';
 const Stack = createNativeStackNavigator();
 
 const RootNavigator = () => {
-  const user = useSelector((state: RootState) => state.auth?.user);
+  const { user, accessToken } = useSelector((state: RootState) => state.auth);
 
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {!user ? (
-        <Stack.Screen name="Auth" component={AuthStack} />
-      ) : (
-        <Stack.Screen name="Main" component={MainTabs} />
-      )}
-    </Stack.Navigator>
-  );
+const isLoggedIn = user !== null && accessToken !== null;
+
+return (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    {!isLoggedIn ? (
+      <Stack.Screen name="Auth" component={AuthStack} />
+    ) : (
+      <Stack.Screen name="Main" component={MainTabs} />
+    )}
+  </Stack.Navigator>
+);
 };
 
 export default RootNavigator;

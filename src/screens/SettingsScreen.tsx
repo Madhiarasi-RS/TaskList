@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { Button, Text } from 'react-native-paper';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useAppDispatch } from '../store/hooks';
 import { logout } from '../store/authSlice';
 import { CommonActions, useNavigation } from '@react-navigation/native';
@@ -11,10 +10,12 @@ const navigation = useNavigation();
 export const SettingsScreen = () => {
   const signOut = async () => {
   try {
-    await GoogleSignin.signOut();
+    // If you had tokens saved in SecureStore or AsyncStorage, clear them here.
+
     dispatch(logout());
     Alert.alert('Signed out');
-    // Reset navigation stack to Auth
+
+    // Reset navigation to Auth stack
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
