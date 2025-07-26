@@ -4,7 +4,7 @@ import { Button, Title } from 'react-native-paper';
 
 import { useAuthRequest, makeRedirectUri, ResponseType } from 'expo-auth-session';
 
-const CLIENT_ID = '671503456983-rvdf525c9u5j0b1mt6pfclbqj29utmiq.apps.googleusercontent.com';
+const CLIENT_ID = '671503456983-t7dl60q5elf5tvv6s91hg14tmnn3r2ie.apps.googleusercontent.com';
 export const SignInScreen = () => {
   const [loading, setLoading] = useState(false);
 
@@ -63,6 +63,7 @@ export const SignInScreen = () => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
