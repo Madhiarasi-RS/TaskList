@@ -7,8 +7,8 @@ import { MainTabs } from './MainTabs';
 
 const Stack = createNativeStackNavigator();
 
-export const RootNavigator = () => {
-  const user = useSelector((state: RootState) => state.auth?.user); // Placeholder, auth slice to be created
+const RootNavigator = () => {
+  const user = useSelector((state: RootState) => state.auth?.user);
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -20,3 +20,5 @@ export const RootNavigator = () => {
     </Stack.Navigator>
   );
 };
+
+export default RootNavigator;
