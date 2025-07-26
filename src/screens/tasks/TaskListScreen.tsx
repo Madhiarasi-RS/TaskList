@@ -12,7 +12,7 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../types/navigation';
 import Animated, { FadeInLeft, FadeOutRight } from 'react-native-reanimated';
-import { TextInput } from 'react-native';
+import { Chip } from 'react-native-paper';
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TaskList'>;
@@ -27,7 +27,8 @@ export const TaskListScreen: React.FC<Props> = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(searchQuery);
   const [refreshing, setRefreshing] = useState(false);
-
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+  const [priorityFilter, setPriorityFilter] = useState<string | 'All'>('All');
 
     useEffect(() => {
   const handler = setTimeout(() => {
@@ -48,12 +49,18 @@ export const TaskListScreen: React.FC<Props> = ({ navigation }) => {
     setRefreshing(true);
     dispatch(loadTasks()).finally(() => setRefreshing(false));
   }, [dispatch]);
-
-  // Filter tasks by search query
-  const filteredTasks = tasks.filter(task =>
-  task.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
-  task.description.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
-);
+const filteredTasks = tasks
+  .filter(task =>
+    task.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+    task.description.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
+  )
+  .filter(task => priorityFilter === 'All' || task.priority === priorityFilter)
+  .sort((a, b) => {
+    if (a.status === b.status) return 0;
+    if (a.status === 'Completed') return 1;   // put completed tasks at end
+    if (b.status === 'Completed') return -1;
+    return 0;
+  });
 
   useEffect(() => {
   if (error) {
@@ -62,63 +69,155 @@ export const TaskListScreen: React.FC<Props> = ({ navigation }) => {
   }, [error]);
 
   const toggleTaskStatus = (task: Task) => {
-    const updatedTask: Task = {
-      ...task,
-      status: task.status === 'Pending' ? 'Completed' : 'Pending',
-    };
-    dispatch(updateTaskInDB(updatedTask));
+  const updatedTask: Task = {
+    ...task,
+    status: task.status === 'Pending' ? 'Completed' : 'Pending',
   };
+  dispatch(updateTaskInDB(updatedTask));
+  setSelectedTaskId(null);
 
+};
   const deleteTask = (taskId: string) => {
-    Alert.alert('Delete Task', 'Are you sure you want to delete this task?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Delete', style: 'destructive', onPress: () => {
-          dispatch(deleteTaskFromDB(taskId));
-        }
+  Alert.alert('Delete Task', 'Are you sure you want to delete this task?', [
+    { text: 'Cancel', style: 'cancel' },
+    {
+      text: 'Delete',
+      style: 'destructive',
+      onPress: () => {
+        setSelectedTaskId(null); // Close action buttons
+        dispatch(deleteTaskFromDB(taskId));
       },
-    ]);
-  };
+    },
+  ]);
+};
 
-  const renderItem = ({ item }: { item: Task }) => (
-    <Animated.View
+ const renderItem = ({ item }: { item: Task }) => {
+  const isSelected = selectedTaskId === item.id;
+ const isCompleted = item.status === 'Completed';
+  return (
+   <Animated.View
       entering={FadeInLeft.duration(300)}
       exiting={FadeOutRight.duration(300)}
       style={[
         styles.rowFront,
-        item.status === 'Completed' ? { backgroundColor: colors.onSurfaceDisabled } : null,
-      ]}
+isCompleted ? { backgroundColor: '#4CAF50' } : { backgroundColor: 'white' },      ]}
     >
       <View style={{ flex: 1 }}>
-        <Text style={[styles.title, item.status === 'Completed' && { textDecorationLine: 'line-through' }]}>
+        <Text style={[styles.title, isCompleted && { textDecorationLine: 'line-through', color: 'white' }]}>
           {item.title}
         </Text>
-        <Text numberOfLines={1} style={styles.description}>
+        <Text numberOfLines={1} style={[styles.description, isCompleted && { color: '#e0e0e0' }]}>
           {item.description}
         </Text>
       </View>
+
+      {/* Status circle: green when completed */}
       <IconButton
-        icon={item.status === 'Completed' ? 'check-circle-outline' : 'checkbox-blank-circle-outline'}
+        icon={isCompleted ? 'check-circle' : 'checkbox-blank-circle-outline'}
         size={24}
-        onPress={() => toggleTaskStatus(item)}
-        accessibilityLabel={item.status === 'Completed' ? 'Mark incomplete' : 'Mark complete'}
+        color={isCompleted ? 'white' : '#4CAF50'} // white icon on green, green icon on white
+        onPress={() => setSelectedTaskId(isSelected ? null : item.id)}
+        accessibilityLabel={isCompleted ? 'Mark incomplete' : 'More actions'}
       />
+      {/* Toggle Mark complete / undo button */}
+{/* <IconButton
+  icon={isCompleted ? 'undo-variant' : 'check-circle-outline'}
+  size={24}
+  color={isCompleted ? 'yellow' : '#4CAF50'}
+  onPress={() => {
+    toggleTaskStatus(item);
+    setSelectedTaskId(null);
+  }}
+  accessibilityLabel={isCompleted ? 'Mark as Pending' : 'Mark as Complete'}
+/> */}
+
+
+      {/* Show actions only if pending; no dustbin icon when completed */}
+      {isSelected && (
+        <View style={styles.actionIconsContainer}>
+          {!isCompleted && (
+            <IconButton
+              icon={isCompleted ? 'undo-variant' : 'check-circle-outline'}
+              size={24}
+              color={isCompleted ? 'white' : '#4CAF50'}
+              onPress={() => {
+                setSelectedTaskId(null);
+                toggleTaskStatus(item);
+              }}
+ accessibilityLabel={isCompleted ? 'Mark as Pending' : 'Mark as Complete'}           
+  />
+       )}
+          <IconButton
+            icon="pencil-outline"
+            size={24}
+            color={isCompleted ? 'white' : undefined}
+            onPress={() => {
+              setSelectedTaskId(null);
+              navigation.navigate('TaskAddEdit', { task: item });
+            }}
+            accessibilityLabel="Edit task"
+          />
+          {!isCompleted && (
+            <IconButton
+              icon="delete-outline"
+              size={24}
+              color="#b00020"
+              onPress={() => {
+                setSelectedTaskId(null);
+                deleteTask(item.id);
+              }}
+              accessibilityLabel="Delete task"
+            />
+          )}
+          <IconButton
+            icon="information-outline"
+            size={24}
+            color={isCompleted ? 'white' : '#2196F3'}
+            onPress={() => Alert.alert('Task Priority', `Priority: ${item.priority}`)}
+            accessibilityLabel="Task info"
+          />
+
+          <IconButton
+            icon="close"
+            size={24}
+            color={isCompleted ? 'white' : undefined}
+            onPress={() => setSelectedTaskId(null)}
+            accessibilityLabel="Cancel"
+          />
+        </View>
+      )}
     </Animated.View>
   );
+};
 
-  const renderHiddenItem = (data: { item: Task }) => (
-    <View style={styles.rowBack}>
+const renderHiddenItem = ({ item }: { item: Task }) => (
+  <View style={styles.rowBack}>
+    {item.status !== 'Completed' && (
       <IconButton
         icon="delete"
         iconColor="white"
         size={28}
-        onPress={() => deleteTask(data.item.id)}
+        onPress={() => deleteTask(item.id)}
         accessibilityLabel="Delete task"
       />
-    </View>
-  );
+    )}
+  </View>
+);
 
   return (
+    <>
+    <View style={styles.filterContainer}>
+  {['All', 'Low', 'Medium', 'High'].map(priority => (
+    <Chip
+      key={priority}
+      mode={priorityFilter === priority ? 'flat' : 'outlined'}
+      onPress={() => setPriorityFilter(priority as any)}
+      style={{ marginHorizontal: 4 }}
+    >
+      {priority}
+    </Chip>
+  ))}
+</View>
     <View style={styles.container}>
       <Searchbar
         placeholder="Search tasks"
@@ -129,7 +228,7 @@ export const TaskListScreen: React.FC<Props> = ({ navigation }) => {
       />
       {filteredTasks.length === 0 && !loading ? (
         <View style={styles.emptyContainer}>
-          <Text>No tasks found. Pull down to refresh or add a new task.</Text>
+          <Text>No tasks found. Add a new task.</Text>
         </View>
       ) : (
         <SwipeListView
@@ -153,6 +252,7 @@ export const TaskListScreen: React.FC<Props> = ({ navigation }) => {
         accessibilityLabel="Add new task"
       />
     </View>
+    </>
   );
 };
 
@@ -166,9 +266,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     padding: 16,
   },
+  actionIconsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
   rowBack: {
     alignItems: 'center',
-    backgroundColor: 'red',
+    backgroundColor: '#ce7664ff',
     flex: 1,
     justifyContent: 'flex-end',
     paddingRight: 20,
@@ -185,4 +290,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 50,
   },
+  filterContainer: {
+  flexDirection: 'row',
+  justifyContent: 'center',
+  paddingHorizontal: 8,
+  paddingBottom: 8,
+},
 });

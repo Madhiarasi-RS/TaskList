@@ -14,11 +14,11 @@ const isLoggedIn = user !== null && accessToken !== null;
 
 return (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
-    {!isLoggedIn ? (
+    {/* {!isLoggedIn ? (
       <Stack.Screen name="Auth" component={AuthStack} />
-    ) : (
+    ) : ( */}
       <Stack.Screen name="Main" component={MainTabs} />
-    )}
+    {/* )} */}
   </Stack.Navigator>
 );
 };

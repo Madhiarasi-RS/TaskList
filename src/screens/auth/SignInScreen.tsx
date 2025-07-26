@@ -4,7 +4,7 @@ import { Button, Title } from 'react-native-paper';
 
 import { useAuthRequest, makeRedirectUri, ResponseType } from 'expo-auth-session';
 
-const CLIENT_ID = '671503456983-t7dl60q5elf5tvv6s91hg14tmnn3r2ie.apps.googleusercontent.com';
+const CLIENT_ID = '671503456983-qtqg86vgj0qdb7iiv88pra02cud3d3al.apps.googleusercontent.com';
 export const SignInScreen = () => {
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +18,11 @@ export const SignInScreen = () => {
     },
     { authorizationEndpoint: 'https://accounts.google.com/o/oauth2/v2/auth' }
   );
-
+  React.useEffect(() => {
+    if (request) {
+      console.log('Auth URL:', request.url);
+    }
+  }, [request]);
   React.useEffect(() => {
     const handleAuthResponse = async () => {
       if (response?.type === 'success' && response.params.access_token) {
@@ -38,6 +42,7 @@ export const SignInScreen = () => {
           setLoading(false);
         }
       } else if (response?.type === 'error') {
+        
         Alert.alert('Sign in error');
       }
     };

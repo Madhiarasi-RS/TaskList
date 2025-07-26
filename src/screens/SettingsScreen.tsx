@@ -30,7 +30,7 @@ const signOut = async () => {
 
   return (
     <View style={styles.container}>
-      <Text variant="titleLarge" style={{ marginBottom: 20 }}>Settings</Text>
+      <Text variant="titleLarge" style={{ marginBottom: 20 }}>Sign Out</Text>
       <Button mode="outlined" onPress={signOut} accessibilityLabel="Sign out">
         Sign Out
       </Button>
