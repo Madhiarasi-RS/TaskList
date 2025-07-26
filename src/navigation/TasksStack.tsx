@@ -1,10 +1,11 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import type { MainStackParamList } from '../navigation/types';
 import { TaskListScreen } from '../screens/tasks/TaskListScreen';
-import { TaskDetailScreen } from '../screens/tasks/TaskDetailScreen';
-import { TaskAddEditScreen } from '../screens/tasks/TaskAddEditScreen';
+import {TaskDetailScreen}  from '../screens/tasks/TaskDetailScreen';
+import {TaskAddEditScreen} from '../screens/tasks/TaskAddEditScreen';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<MainStackParamList>();
 
 const TasksStack = () => (
   <Stack.Navigator>

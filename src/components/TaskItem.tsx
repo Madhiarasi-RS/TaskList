@@ -1,7 +1,8 @@
 // src/components/TaskItem.tsx
 import React from 'react';
 import { StyleSheet, View, Text as RNText } from 'react-native';
-import { IconButton, Text, useTheme } from 'react-native-paper';
+import { Text, useTheme } from 'react-native-paper';
+import { IconButton } from 'react-native-paper';
 import Animated, { FadeInLeft, FadeOutRight } from 'react-native-reanimated';
 
 export interface TaskItemProps {
@@ -30,7 +31,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({
       exiting={FadeOutRight.duration(250)}
       style={[
         styles.container,
-        task.status === 'Completed' ? { backgroundColor: colors.disabled } : {},
+        task.status === 'Completed' ? { backgroundColor: colors.onSurfaceDisabled } : {},
       ]}
     >
       <View style={styles.textContainer}>
@@ -38,7 +39,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({
           onPress={onPress}
           style={[
             styles.title,
-            task.status === 'Completed' && { textDecorationLine: 'line-through', color: colors.disabled },
+            task.status === 'Completed' && { textDecorationLine: 'line-through', color: colors.onSurfaceDisabled },
           ]}
           accessibilityRole="button"
           accessibilityState={{ disabled: false }}

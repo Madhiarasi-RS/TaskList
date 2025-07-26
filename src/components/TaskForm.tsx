@@ -8,7 +8,7 @@ import {
   Text,
   HelperText,
 } from 'react-native-paper';
-import DateTimePicker from 'expo-date-time-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 // Use just like @react-native-community/datetimepicker
 import { Task } from '../store/tasksSlice';
 
