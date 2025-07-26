@@ -10,16 +10,13 @@ import RootNavigator from './src/navigation/RootNavigator'; // Adjust import pat
 
 export default function App() {
   return (
-    // Redux store for state management
     <ReduxProvider store={store}> 
-      {/* React Native Paper theme provider */}
-      <PaperProvider>
-        {/* Navigation container for React Navigation */}
-        <NavigationContainer>
-          <RootNavigator />
-        </NavigationContainer>
-        <StatusBar style="auto" />
-      </PaperProvider>
-    </ReduxProvider>
+  <PaperProvider>
+    <NavigationContainer>
+      <RootNavigator />
+    </NavigationContainer>
+  </PaperProvider>
+</ReduxProvider>
+
   );
 }

@@ -4,11 +4,12 @@ import { Button, Text } from 'react-native-paper';
 import { useAppDispatch } from '../store/hooks';
 import { logout } from '../store/authSlice';
 import { CommonActions, useNavigation } from '@react-navigation/native';
-const dispatch = useAppDispatch();
-const navigation = useNavigation();
+
 
 export const SettingsScreen = () => {
-  const signOut = async () => {
+  const dispatch = useAppDispatch();
+const navigation = useNavigation();
+const signOut = async () => {
   try {
     // If you had tokens saved in SecureStore or AsyncStorage, clear them here.
 

@@ -62,7 +62,7 @@ export const TaskListScreen: React.FC<Props> = ({ navigation }) => {
   }, [error]);
 
   const toggleTaskStatus = (task: Task) => {
-    const updatedTask = {
+    const updatedTask: Task = {
       ...task,
       status: task.status === 'Pending' ? 'Completed' : 'Pending',
     };
@@ -86,7 +86,7 @@ export const TaskListScreen: React.FC<Props> = ({ navigation }) => {
       exiting={FadeOutRight.duration(300)}
       style={[
         styles.rowFront,
-        item.status === 'Completed' ? { backgroundColor: colors.disabled } : null,
+        item.status === 'Completed' ? { backgroundColor: colors.onSurfaceDisabled } : null,
       ]}
     >
       <View style={{ flex: 1 }}>
@@ -110,7 +110,7 @@ export const TaskListScreen: React.FC<Props> = ({ navigation }) => {
     <View style={styles.rowBack}>
       <IconButton
         icon="delete"
-        color="white"
+        iconColor="white"
         size={28}
         onPress={() => deleteTask(data.item.id)}
         accessibilityLabel="Delete task"
