@@ -8,13 +8,13 @@ export const initDB = () => {
         id TEXT PRIMARY KEY NOT NULL,
         title TEXT,
         description TEXT,
+        dueDate TEXT,
         status TEXT,
         priority TEXT 
       );`
     );
   });
 };
-
 export const fetchTasksFromDB = (): Promise<Task[]> => {
   return new Promise((resolve, reject) => {
     try {
@@ -30,13 +30,11 @@ export const fetchTasksFromDB = (): Promise<Task[]> => {
 
 export const insertTaskToDB = (task: Task): Promise<void> => {
   return new Promise((resolve, reject) => {
-export const insertTaskToDB = (task: Task): Promise<void> => {
-  return new Promise((resolve, reject) => {
     try {
       db.withTransactionSync(() => {
         db.runSync(
-          'INSERT INTO tasks (id, title, description, status) VALUES (?, ?, ?, ?)',
-          task.id, task.title, task.description, task.status
+         'INSERT INTO tasks (id, title, description, dueDate, status, priority) VALUES (?, ?, ?, ?, ?, ?)',
+          task.id, task.title, task.description, task.dueDate, task.status, task.priority
         );
         resolve();
       });
@@ -45,14 +43,13 @@ export const insertTaskToDB = (task: Task): Promise<void> => {
     }
   });
 };
-  return new Promise((resolve, reject) => {
 export const updateTaskInDB = (task: Task): Promise<void> => {
   return new Promise((resolve, reject) => {
     try {
       db.withTransactionSync(() => {
         db.runSync(
-          'UPDATE tasks SET title = ?, description = ?, status = ? WHERE id = ?',
-          task.title, task.description, task.status, task.id
+         'UPDATE tasks SET title = ?, description = ?, dueDate = ?, status = ?, priority = ? WHERE id = ?',
+          task.title, task.description, task.dueDate, task.status, task.priority, task.id
         );
         resolve();
       });
@@ -61,7 +58,6 @@ export const updateTaskInDB = (task: Task): Promise<void> => {
     }
   });
 };
-  return new Promise((resolve, reject) => {
 export const deleteTaskFromDB = (id: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     try {

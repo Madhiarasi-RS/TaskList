@@ -12,6 +12,8 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../types/navigation';
 import Animated, { FadeInLeft, FadeOutRight } from 'react-native-reanimated';
+import { TextInput } from 'react-native';
+
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TaskList'>;
 
@@ -23,7 +25,20 @@ export const TaskListScreen: React.FC<Props> = ({ navigation }) => {
   const error = useAppSelector(state => state.tasks.error);
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(searchQuery);
   const [refreshing, setRefreshing] = useState(false);
+
+
+    useEffect(() => {
+  const handler = setTimeout(() => {
+    setDebouncedSearchQuery(searchQuery);
+  }, 300); // 300ms debounce
+
+  return () => {
+    clearTimeout(handler);
+  };
+}, [searchQuery]);
+
 
   useEffect(() => {
     dispatch(loadTasks());
@@ -36,13 +51,15 @@ export const TaskListScreen: React.FC<Props> = ({ navigation }) => {
 
   // Filter tasks by search query
   const filteredTasks = tasks.filter(task =>
-    task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    task.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  task.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+  task.description.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
+);
 
+  useEffect(() => {
   if (error) {
     Alert.alert('Error loading tasks', error);
   }
+  }, [error]);
 
   const toggleTaskStatus = (task: Task) => {
     const updatedTask = {

@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { Text, Button, useTheme } from 'react-native-paper';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../types/navigation';
-
+import { ScrollView } from 'react-native';
 type Props = NativeStackScreenProps<RootStackParamList, 'TaskDetail'>;
 
 export const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
@@ -19,7 +19,7 @@ export const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text variant="titleLarge">{task.title}</Text>
       <Text variant="bodyMedium" style={{ marginVertical: 8 }}>{task.description}</Text>
       <Text variant="bodySmall" style={{ marginBottom: 4 }}>
@@ -39,7 +39,7 @@ export const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
       >
         Edit Task
       </Button>
-    </View>
+    </ScrollView>
   );
 };
 

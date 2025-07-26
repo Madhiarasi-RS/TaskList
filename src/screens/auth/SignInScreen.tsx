@@ -38,6 +38,7 @@ export const SignInScreen = () => {
         onPress={signIn}
         loading={loading}
         disabled={loading}
+        accessibilityLabel="Sign in with Google"
       >
         Sign in with Google
       </Button>
