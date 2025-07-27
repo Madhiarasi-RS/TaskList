@@ -110,26 +110,32 @@ isCompleted ? { backgroundColor: '#4CAF50' } : { backgroundColor: 'white' },    
           {item.description}
         </Text>
       </View>
-
-      {/* Status circle: green when completed */}
       <IconButton
-        icon={isCompleted ? 'check-circle' : 'checkbox-blank-circle-outline'}
+  icon="dots-vertical"
+  size={24}
+  iconColor="#010201ff" // or any color you prefer
+  onPress={() => setSelectedTaskId(isSelected ? null : item.id)}
+  accessibilityLabel="More options"
+/>
+      {/* Status circle: green when completed */}
+      {/* <IconButton
+        icon={isCompleted ? 'check-square' : 'checkbox-blank-square-outline'}
         size={24}
-        color={isCompleted ? 'white' : '#4CAF50'} // white icon on green, green icon on white
+        iconColor={isCompleted ? 'white' : '#4CAF50'} // white icon on green, green icon on white
         onPress={() => setSelectedTaskId(isSelected ? null : item.id)}
         accessibilityLabel={isCompleted ? 'Mark incomplete' : 'More actions'}
-      />
+      /> */}
       {/* Toggle Mark complete / undo button */}
-{/* <IconButton
+<IconButton
   icon={isCompleted ? 'undo-variant' : 'check-circle-outline'}
   size={24}
-  color={isCompleted ? 'yellow' : '#4CAF50'}
+  iconColor={isCompleted ? 'yellow' : '#4CAF50'}
   onPress={() => {
     toggleTaskStatus(item);
     setSelectedTaskId(null);
   }}
   accessibilityLabel={isCompleted ? 'Mark as Pending' : 'Mark as Complete'}
-/> */}
+/>
 
 
       {/* Show actions only if pending; no dustbin icon when completed */}
@@ -139,7 +145,7 @@ isCompleted ? { backgroundColor: '#4CAF50' } : { backgroundColor: 'white' },    
             <IconButton
               icon={isCompleted ? 'undo-variant' : 'check-circle-outline'}
               size={24}
-              color={isCompleted ? 'white' : '#4CAF50'}
+              iconColor={isCompleted ? 'white' : '#4CAF50'}
               onPress={() => {
                 setSelectedTaskId(null);
                 toggleTaskStatus(item);
@@ -150,7 +156,7 @@ isCompleted ? { backgroundColor: '#4CAF50' } : { backgroundColor: 'white' },    
           <IconButton
             icon="pencil-outline"
             size={24}
-            color={isCompleted ? 'white' : undefined}
+            iconColor={isCompleted ? 'white' : undefined}
             onPress={() => {
               setSelectedTaskId(null);
               navigation.navigate('TaskAddEdit', { task: item });
@@ -161,7 +167,7 @@ isCompleted ? { backgroundColor: '#4CAF50' } : { backgroundColor: 'white' },    
             <IconButton
               icon="delete-outline"
               size={24}
-              color="#b00020"
+              iconColor="#b00020"
               onPress={() => {
                 setSelectedTaskId(null);
                 deleteTask(item.id);
@@ -172,7 +178,7 @@ isCompleted ? { backgroundColor: '#4CAF50' } : { backgroundColor: 'white' },    
           <IconButton
             icon="information-outline"
             size={24}
-            color={isCompleted ? 'white' : '#2196F3'}
+            iconColor={isCompleted ? 'white' : '#2196F3'}
             onPress={() => Alert.alert('Task Priority', `Priority: ${item.priority}`)}
             accessibilityLabel="Task info"
           />
@@ -180,7 +186,7 @@ isCompleted ? { backgroundColor: '#4CAF50' } : { backgroundColor: 'white' },    
           <IconButton
             icon="close"
             size={24}
-            color={isCompleted ? 'white' : undefined}
+            iconColor={isCompleted ? 'white' : undefined}
             onPress={() => setSelectedTaskId(null)}
             accessibilityLabel="Cancel"
           />
