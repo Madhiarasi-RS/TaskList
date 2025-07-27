@@ -2,7 +2,7 @@
   "expo": {
     "name": "TaskList",
     "slug": "TaskList",
-    "scheme":"TaskList",
+    "scheme": "TaskList",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,13 +21,19 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.TaskList"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-sqlite"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "e0cd7b6c-12d9-4258-8fd8-705f0c8b2d2a"
+      }
+    }
   }
 }
